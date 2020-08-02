@@ -1,0 +1,76 @@
+from django.test import TestCase, RequestFactory
+from django.forms.models import model_to_dict
+
+from users.models import User
+from users.forms import UserRegistrationForm
+from django.shortcuts import reverse
+from users.views import SignupView
+
+from users.models import Profile
+from users.admin import UserAdminCreationForm
+
+class TestForms(TestCase):
+    def setUp(self):
+        self.form = UserRegistrationForm(
+            {
+                "email"     : "shfhhkxdh@gmail.com",
+                "password1" : "jfhvks123",
+                "password2" : "jfhvks123",
+
+                "profile_photo" : "/home/chukwunazaekpere/Dev/Django_world/Projects/Socials/users/B_plan.png",
+                "firstname"  : "Emmanuel",
+            }
+        )
+        self.factory = RequestFactory()
+
+        self.user1 = User.objects.create_user(
+            email     = "shfhkxdh@gmail.com",
+            password = "jfhvks123",
+        )
+
+        
+        self.form1 =  {
+                "email"     : "shfhhkxdh@gmail.com",
+                "password1" : "jfhvks123",
+                "password2" : "jfhvks123",
+
+                "profile_photo" : "/home/chukwunazaekpere/Dev/Django_world/Projects/Socials/users/B_plan.png",
+                "firstname"  : "Emmanuel",
+            }
+
+    def test_form_validity(self):
+        data = {'form': self.form}
+        response = self.client.post(reverse("users:signup"), self.form)
+        print("\n\t resp: ", response.context)
+        # print("\n\t Errors: ",self.form.errors)
+
+        self.assertTrue(self.form.is_valid())
+
+
+
+
+    # def test_form_fields(self):
+    #     response = self.client.get(reverse("users:signup"))
+
+    #     self.assertEquals(response.status_code, 200)
+    #     # print("\n\t context: ", response.context)
+
+    #     self.assertIn('form', response.context)
+    #     self.assertIsInstance(response.context['form'], UserRegistrationForm)
+    #     self.assertIn("profile_photo", response.context['form'].fields)
+    #     self.assertIn("email", response.context['form'].fields)
+    #     self.assertIn("first_name", response.context['form'].fields)
+
+
+
+    # def test_form_save_method(self):
+       
+    #     data ={"items": [self.form1, self.profile1]}
+       
+    #     response = self.client.post(reverse("users:signup"), data=data)
+    #     print("\n\t resp: ",response.request)
+    #     print("\n\t context: ", response.context)
+
+    #     self.assertTrue(response.context['form'].bound)
+    #     self.assertEquals(response.context['form'].valid, True)
+
